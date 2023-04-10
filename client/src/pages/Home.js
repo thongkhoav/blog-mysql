@@ -33,7 +33,7 @@ function Home() {
           <Post key={post.id}>
             <div className="img">
               <img
-                onError={(e) => (e.target.src = `../upload/${post.img}`)}
+                // onError={(e) => (e.target.src = `../upload/${post.img}`)}
                 src={post.img}
                 alt=""
               />
@@ -43,7 +43,9 @@ function Home() {
                 <h1>{post.title}</h1>
               </Link>
               <p>{getText(post.desc)}</p>
-              <button>Read More</button>
+              <button>
+                <Link to={`/post/${post.id}`}>Read More</Link>
+              </button>
             </div>
           </Post>
         ))}
@@ -54,7 +56,10 @@ function Home() {
 
 export default Home;
 
-const HomeContainer = styled.div``;
+const HomeContainer = styled.div`
+  width: 100%;
+`;
+
 const Posts = styled.div`
   margin-top: 50px;
   display: flex;
@@ -63,6 +68,7 @@ const Posts = styled.div`
 `;
 const Post = styled.div`
   display: flex;
+  width: 100%;
   gap: 100px;
 
   &:nth-child(2n + 1) {
@@ -73,7 +79,7 @@ const Post = styled.div`
     flex: 1;
     position: relative;
 
-    &::after {
+    /* &::after {
       content: "";
       width: 100%;
       height: 100%;
@@ -82,12 +88,18 @@ const Post = styled.div`
       top: 20px;
       left: -20px;
       z-index: -1;
-    }
+    } */
 
     img {
       width: 100%;
       max-height: 400px;
       object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 0px 0px 11px 1px rgba(0, 0, 0, 0.14);
+      border: 1px solid rgba(0, 0, 0, 0);
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
     }
   } // img div
 
@@ -98,11 +110,17 @@ const Post = styled.div`
     justify-content: space-between;
 
     h1 {
-      font-size: 48px;
+      font-size: 35px;
     }
 
     p {
+      text-align: justify;
       font-size: 18px;
+      display: -webkit-box;
+      -webkit-line-clamp: 5;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     button {

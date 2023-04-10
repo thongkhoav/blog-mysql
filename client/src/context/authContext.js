@@ -5,11 +5,11 @@ export const AuthContext = createContext();
 
 export function AuthContextProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(
-    JSON.parse(localStorage.getItem("user") || null)
+    JSON.parse(localStorage.getItem("buser") || null)
   );
   // Side Effect
   useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(currentUser));
+    localStorage.setItem("buser", JSON.stringify(currentUser));
   }, [currentUser]);
 
   // Functions

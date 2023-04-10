@@ -2,20 +2,22 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import Edit from "../assets/images/edit.png";
 import Delete from "../assets/images/delete.png";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import Menu from "../components/Menu";
 import axios from "axios";
 import moment from "moment";
 import { AuthContext } from "../context/authContext";
+import avatar from '../assets/images/unnamed.jpg'
 
 function Single() {
   const [post, setPost] = useState({});
   const [author, setAuthor] = useState({});
-  const location = useLocation();
-  const postId = location.pathname.split("/")[2];
+  const {id: postId} = useParams();
   const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
+  console.log(post, currentUser);
 
+  // fetch 
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -45,14 +47,14 @@ function Single() {
   return (
     <SingleContainer>
       <Content>
-        <img src={`../upload/${post?.img}`} alt="" />
+        <img src={post?.img} alt="" />
         <div className="user">
-          <img src={post?.avatar} alt="" />
+          <img src={post?.avatar || avatar} alt="" />
           <div className="info">
-            <span>{post.username}</span>
-            <p>Posted {moment(post.date).fromNow()}</p>
+            <span>{post?.username}</span>
+            <p>Posted {moment(post?.date).fromNow()}</p>
           </div>
-          {currentUser.username === post.username && (
+          {currentUser?.username === post?.username && (
             <div className="action">
               <Link to={`/write?edit=2`} state={post}>
                 <img src={Edit} alt="" />

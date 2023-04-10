@@ -7,13 +7,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import $ from "jquery";
 import moment from "moment";
-import single from "../";
+// import single from "../";
+import API_URL from "../api/Router";
 
 function Write() {
   const state = useLocation().state;
+  // console.log(state);
   const [value, setValue] = useState(state?.desc || "");
   const [title, setTitle] = useState(state?.title || "");
   const [file, setFile] = useState(null);
+  // const [encodeImage, setEncodeImage] = useState("");
   const [cate, setCate] = useState(state?.cate || "");
   const navigate = useNavigate();
 
@@ -22,36 +25,33 @@ function Write() {
   }, [cate]);
 
   // Functions
-  const handleUpload = async (e) => {
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await axios.post("/upload", formData);
-      console.log(res.data);
-      return res.data;
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const handleUpload = async (e) => {
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("filee", file);
+  //     formData.append("name", "chó");
+  //     const res = await axios.post("/upload", formData);
+  //     // setEncodeImage(res.data)
+  //     return res.data;
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   const handlePublish = async (e) => {
     e.preventDefault();
-    const imgUrl = await handleUpload();
+    // const imgUrl = await handleUpload();
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("title", title);
+    formData.append("cate", cate);
+    formData.append("desc", value);
+    formData.append("date", moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"));
+
     try {
       state
-        ? await axios.put("/posts/" + state.id, {
-            desc: value,
-            title,
-            cate,
-            img: file ? imgUrl : "",
-          })
-        : await axios.post("/posts", {
-            desc: value,
-            title,
-            cate,
-            img: file ? imgUrl : "abc",
-            date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-          });
+        ? await axios.put(`/posts/` + state.id, formData)
+        : await axios.post(`/posts`, formData);
       navigate("/");
     } catch (err) {
       console.log(err);
@@ -59,6 +59,7 @@ function Write() {
   };
   return (
     <WriteContainer>
+      {/* <img src={encodeImage} alt="" /> */}
       <Content>
         <input
           placeholder="Title"
@@ -93,6 +94,7 @@ function Write() {
           <label htmlFor="file" className="file">
             Upload Image
           </label>
+          {/* <button onClick={handleUpload}>upload</button> */}
           <div className="buttons">
             <button>Save as draft</button>
             <button onClick={handlePublish}>
